@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using Cymax.Grabber.Entities.Interfaces;
 using Newtonsoft.Json;
 
 namespace Cymax.Grabber.Entities.Models.Api1.Requests;
 
-public class Api1Request
+public class Api1Request: IRequest
 {
     [JsonProperty("contact address")]
     public string ContactAddress { get; set; }

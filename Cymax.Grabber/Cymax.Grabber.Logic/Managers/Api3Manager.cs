@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Cymax.Grabber.Entities;
@@ -10,9 +11,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Cymax.Grabber.Logic.Managers;
 
-public class Api3Manager: IApiManager<Api3Request>
+internal class Api3Manager: IBaseApiManager
 {
-    public Api3Request Data { get; set; }
+    public Type RequestType => typeof(Api3Request);
         
     private readonly HttpClient _client;
     private readonly IConfiguration _configuration;
@@ -24,9 +25,9 @@ public class Api3Manager: IApiManager<Api3Request>
         _configuration = configuration;
     }
 
-    public async Task<decimal> MakeRequest()
+    public async Task<decimal> MakeRequest(IRequest request)
     {
-        var content = HttpHelpers.CreateJsonRequestBody(Data);
+        var content = HttpHelpers.CreateXmlRequestBody(request);
         var timeout = HttpHelpers.GetRequestTimeout(_configuration);
         using var tokenSource = timeout.HasValue
             ? new CancellationTokenSource(timeout.Value)

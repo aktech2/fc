@@ -14,17 +14,19 @@ public class XmlConvertor
     {
         var xws = new XmlWriterSettings
         {
-            OmitXmlDeclaration = false,
+            OmitXmlDeclaration = true,
             Encoding = Encoding.UTF8,
             Indent = true,
+            
         };
+        var ns = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
 
         var formatter = new XmlSerializer(o.GetType());
         
         // XmlWriter ignores XmlWriterSettings.Encoding setting
         var textWriter = new StringWriterWithEncoding(xws.Encoding);
         using var xmlWriter = XmlWriter.Create(textWriter, xws);
-        formatter.Serialize(xmlWriter, o);
+        formatter.Serialize(xmlWriter, o, ns);
         var res = textWriter.ToString();
         return _nullDataRegEx.Replace(res, string.Empty);
     }

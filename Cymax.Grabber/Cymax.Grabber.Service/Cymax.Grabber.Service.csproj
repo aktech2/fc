@@ -9,4 +9,15 @@
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Cymax.Grabber.Entities\Cymax.Grabber.Entities.csproj" />
+      <ProjectReference Include="..\Cymax.Grabber.Logic\Cymax.Grabber.Logic.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="appsettings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

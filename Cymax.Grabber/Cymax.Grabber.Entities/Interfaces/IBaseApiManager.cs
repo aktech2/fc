@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Cymax.Grabber.Entities.Interfaces;
 
 public interface IBaseApiManager
 {
-    Task<decimal> MakeRequest();
+    Type RequestType { get; }
+    Task<decimal> MakeRequest(IRequest request);
 }

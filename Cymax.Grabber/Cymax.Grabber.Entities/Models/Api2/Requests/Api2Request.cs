@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Cymax.Grabber.Entities.Interfaces;
 
 namespace Cymax.Grabber.Entities.Models.Api2.Requests;
 
-public class Api2Request
+public class Api2Request: IRequest
 {
     public string Consignee { get; set; }
         

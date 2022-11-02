@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Cymax.Grabber.Entities.Interfaces;
 using Cymax.Grabber.Entities.Models.Api1.Requests;
@@ -25,6 +26,10 @@ namespace Cymax.Grabber.Service
              * 
              * How IRequest must be processed decided inside GlobalApiManager.Instance.ProcessRequests.
              * It retrieves preferred API Manager according RequestType property from IBaseApiManager interface
+             *
+             * Response with the cheapest price will always be the first in the result list
+             *
+             * ProcessingResponse can be matched with IRequest from input list by RequestType property
             */
             GlobalApiManager.Instance.Init(CreateProvider());
             var requests = new List<IRequest>()
@@ -52,7 +57,22 @@ namespace Cymax.Grabber.Service
                     }
                 }
             };
-            var res = await GlobalApiManager.Instance.ProcessRequests(requests);
+            var result = await GlobalApiManager.Instance.ProcessRequests(requests);
+            
+            Console.WriteLine("Results:");
+            for (int i = 0; i < result.Count; i++)
+            {
+                var item = result[i];
+                var price = item.IsSuccess 
+                    ? item.Value.ToString(CultureInfo.InvariantCulture)
+                    : "-";
+                var cheapestMarker = item.IsSuccess && i == 0
+                    ? "[Cheapest]"
+                    : string.Empty;
+                Console.WriteLine($"Request: {item.RequestType.Name}\tPrice: {price}\t{cheapestMarker}");
+            }
+
+            Console.ReadLine();
         }
 
         private static IServiceProvider CreateProvider()

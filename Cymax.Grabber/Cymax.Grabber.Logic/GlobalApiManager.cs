@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cymax.Grabber.Entities.Interfaces;
 using Cymax.Grabber.Entities.Models.Factory;
+using Cymax.Grabber.Logic.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -55,7 +56,10 @@ public class GlobalApiManager
     {
         var tasks = requests.Select(ProcessRequest);
         var result = await Task.WhenAll(tasks);
-        return result.ToList();
+        var list = result.ToList();
+        //Sort objects by price
+        list.Sort(new ProcessingResponseComparer());
+        return list;
     }
 
     private async Task<ProcessingResponse> ProcessRequest(IRequest request)

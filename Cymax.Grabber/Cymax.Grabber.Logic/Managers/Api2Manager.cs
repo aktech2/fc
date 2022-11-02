@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cymax.Grabber.Entities;
 using Cymax.Grabber.Entities.Interfaces;
-using Cymax.Grabber.Entities.Models.Api1.Requests;
 using Cymax.Grabber.Entities.Models.Api2.Requests;
 using Cymax.Grabber.Entities.Models.Api2.Responses;
 using Cymax.Grabber.Logic.Utils;

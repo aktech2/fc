@@ -6,9 +6,10 @@ using System.Xml.Serialization;
 
 namespace Cymax.Grabber.Logic.Utils;
 
-public class XmlConvertor
+// Class covered by tests
+public static class XmlConvertor
 {
-    private static Regex _nullDataRegEx = new Regex("\\s+<\\w+ xsi:nil=\"true\" \\/>", RegexOptions.Compiled);
+    private static readonly Regex NullDataRegEx = new Regex("\\s+<\\w+ xsi:nil=\"true\" \\/>", RegexOptions.Compiled);
     
     public static string Serialize(object o)
     {
@@ -16,19 +17,23 @@ public class XmlConvertor
         {
             OmitXmlDeclaration = true,
             Encoding = Encoding.UTF8,
+#if DEBUG
             Indent = true,
+#else
+            Indent = false,
+#endif
             
         };
         var ns = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
 
         var formatter = new XmlSerializer(o.GetType());
         
-        // XmlWriter ignores XmlWriterSettings.Encoding setting
+        // To prevent ignoring XmlWriterSettings.Encoding setting
         var textWriter = new StringWriterWithEncoding(xws.Encoding);
         using var xmlWriter = XmlWriter.Create(textWriter, xws);
         formatter.Serialize(xmlWriter, o, ns);
         var res = textWriter.ToString();
-        return _nullDataRegEx.Replace(res, string.Empty);
+        return NullDataRegEx.Replace(res, string.Empty);
     }
 
     public static T Deserialize<T>(Stream stream)

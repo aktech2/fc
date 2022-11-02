@@ -27,7 +27,7 @@ internal class Api3Manager: IBaseApiManager
 
     public async Task<decimal> MakeRequest(IRequest request)
     {
-        var content = HttpHelpers.CreateXmlRequestBody(request);
+        var content = HttpHelpers.CreateXmlHttpContent(request);
         var timeout = HttpHelpers.GetRequestTimeout(_configuration);
         using var tokenSource = timeout.HasValue
             ? new CancellationTokenSource(timeout.Value)

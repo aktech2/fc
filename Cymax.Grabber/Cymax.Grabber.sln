@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cymax.Grabber.Entities", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cymax.Grabber.Logic", "Cymax.Grabber.Logic\Cymax.Grabber.Logic.csproj", "{86F0D2B3-223E-4FEB-BF2D-F85A2A5AAC48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cymax.Grabber.Tests", "Cymax.Grabber.Tests\Cymax.Grabber.Tests.csproj", "{9D1F900A-F9E7-4204-A03E-39D008B5FDB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cymax.Grabber.Tests", "Cymax.Grabber.Tests\Cymax.Grabber.Tests.csproj", "{9B0ECFBD-12FB-43C1-9291-EE64B75BDD67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,9 +26,9 @@ Global
 		{86F0D2B3-223E-4FEB-BF2D-F85A2A5AAC48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86F0D2B3-223E-4FEB-BF2D-F85A2A5AAC48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86F0D2B3-223E-4FEB-BF2D-F85A2A5AAC48}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9D1F900A-F9E7-4204-A03E-39D008B5FDB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9D1F900A-F9E7-4204-A03E-39D008B5FDB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9D1F900A-F9E7-4204-A03E-39D008B5FDB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9D1F900A-F9E7-4204-A03E-39D008B5FDB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B0ECFBD-12FB-43C1-9291-EE64B75BDD67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B0ECFBD-12FB-43C1-9291-EE64B75BDD67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B0ECFBD-12FB-43C1-9291-EE64B75BDD67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B0ECFBD-12FB-43C1-9291-EE64B75BDD67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

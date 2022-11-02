@@ -11,15 +11,16 @@ using Newtonsoft.Json;
 
 namespace Cymax.Grabber.Logic.Utils
 {
+    // Class covered by tests
     public class HttpHelpers
     {
-        public static StringContent CreateJsonRequestBody(object data)
+        public static StringContent CreateJsonHttpContent(object data)
         {
             var serializedData = JsonConvert.SerializeObject(data);
             return new StringContent(serializedData, Encoding.UTF8, "application/json");
         }
         
-        public static StringContent CreateXmlRequestBody(object data)
+        public static StringContent CreateXmlHttpContent(object data)
         {
             var serializedData = XmlConvertor.Serialize(data);
             return new StringContent(serializedData, Encoding.UTF8, "application/xml");

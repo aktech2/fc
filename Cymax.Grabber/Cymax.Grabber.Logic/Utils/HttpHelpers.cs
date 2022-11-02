@@ -18,6 +18,12 @@ namespace Cymax.Grabber.Logic.Utils
             var serializedData = JsonConvert.SerializeObject(data);
             return new StringContent(serializedData, Encoding.UTF8, "application/json");
         }
+        
+        public static StringContent CreateXmlRequestBody(object data)
+        {
+            var serializedData = XmlConvertor.Serialize(data);
+            return new StringContent(serializedData, Encoding.UTF8, "application/xml");
+        }
 
         public static int? GetRequestTimeout(IConfiguration configuration)
         {
@@ -35,6 +41,26 @@ namespace Cymax.Grabber.Logic.Utils
                 using var jsonTextReader = new JsonTextReader(reader);
                 var serializer = new JsonSerializer();
                 var deserializedResponse = serializer.Deserialize<TResponseModel>(jsonTextReader);
+                if (deserializedResponse is null)
+                    throw new Exception("Response is null");
+                
+                return deserializedResponse;
+            }
+
+            if (response.StatusCode != HttpStatusCode.BadRequest) 
+                throw new ApiRequestException(response.StatusCode);
+            
+            var message = await response.Content.ReadAsStringAsync();
+            throw new ApiRequestException(response.StatusCode, message);
+        }
+        
+        public static async Task<TResponseModel> ProcessApiXmlResponse<TResponseModel>(HttpResponseMessage response)
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                // To avoid allocating response as string
+                await using var stream = await response.Content.ReadAsStreamAsync();
+                var deserializedResponse = XmlConvertor.Deserialize<TResponseModel>(stream);
                 if (deserializedResponse is null)
                     throw new Exception("Response is null");
                 

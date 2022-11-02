@@ -61,6 +61,7 @@ public class GlobalApiManager
     private async Task<ProcessingResponse> ProcessRequest(IRequest request)
     {
         var requestType = request.GetType();
+        _logger.LogInformation($"Processing of {requestType} started");
         try
         {
             var manager = (IBaseApiManager)_serviceProvider.GetRequiredService(_requestToManagerMapping[requestType]);
@@ -71,6 +72,10 @@ public class GlobalApiManager
         {
             _logger.LogError(e, $"Exception during sending request - {e.Message}");
             return new ProcessingResponse(requestType, e);
+        }
+        finally
+        {
+            _logger.LogInformation($"Processing of {requestType} finished");
         }
     }
 }

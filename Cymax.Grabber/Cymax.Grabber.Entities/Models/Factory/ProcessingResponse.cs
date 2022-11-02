@@ -4,7 +4,7 @@ namespace Cymax.Grabber.Entities.Models.Factory;
 
 public class ProcessingResponse
 {
-    public Type RequestType { get; }
+    public string ApiManager { get; }
     
     public decimal Value { get; }
     
@@ -12,15 +12,15 @@ public class ProcessingResponse
 
     public bool IsSuccess => Exception is null;
 
-    public ProcessingResponse(Type requestType, decimal value)
+    public ProcessingResponse(string apiManager, decimal value)
     {
-        RequestType = requestType;
+        ApiManager = apiManager;
         Value = value;
     }
     
-    public ProcessingResponse(Type requestType, Exception exception)
+    public ProcessingResponse(string apiManager, Exception exception)
     {
-        RequestType = requestType;
+        ApiManager = apiManager;
         Exception = exception;
     }
 }

@@ -18,9 +18,9 @@ public class ComparerTests
         var list = new List<ProcessingResponse>()
         {
             null,
-            new ProcessingResponse(typeof(Api1Request), 10m),
-            new ProcessingResponse(typeof(Api2Request), 9m),
-            new ProcessingResponse(typeof(Api3Request), new Exception())
+            new ProcessingResponse("API1", 10m),
+            new ProcessingResponse("API2", 9m),
+            new ProcessingResponse("API3", new Exception())
         };
         list.Sort(new ProcessingResponseComparer());
         

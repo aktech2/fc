@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-using Cymax.Grabber.Entities.Interfaces;
 
 namespace Cymax.Grabber.Entities.Models.Api3.Requests;
 
 [XmlRoot("xml")]
-public class Api3Request: IRequest
+public class Api3Request
 {
     [XmlElement("source")]
     public string Source { get; set; }

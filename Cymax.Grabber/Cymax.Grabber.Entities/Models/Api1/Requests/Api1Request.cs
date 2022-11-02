@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Cymax.Grabber.Entities.Models.Api1.Requests;
 
-public class Api1Request: IRequest
+public class Api1Request
 {
     [JsonProperty("contact address")]
     public string ContactAddress { get; set; }

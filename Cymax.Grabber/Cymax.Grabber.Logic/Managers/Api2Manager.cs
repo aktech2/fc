@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Cymax.Grabber.Entities;
 using Cymax.Grabber.Entities.Interfaces;
+using Cymax.Grabber.Entities.Models.Api1.Requests;
 using Cymax.Grabber.Entities.Models.Api2.Requests;
 using Cymax.Grabber.Entities.Models.Api2.Responses;
+using Cymax.Grabber.Entities.Models.Common;
 using Cymax.Grabber.Logic.Utils;
 using Microsoft.Extensions.Configuration;
 
@@ -13,7 +16,7 @@ namespace Cymax.Grabber.Logic.Managers;
 
 internal class Api2Manager: IBaseApiManager
 {
-    public Type RequestType => typeof(Api2Request);
+    public string Name => "API2";
         
     private readonly HttpClient _client;
     private readonly IConfiguration _configuration;
@@ -25,9 +28,20 @@ internal class Api2Manager: IBaseApiManager
         _configuration = configuration;
     }
 
-    public async Task<decimal> MakeRequest(IRequest request)
+    public async Task<decimal> MakeRequest(CommonRequest request)
     {
-        var content = HttpHelpers.CreateJsonHttpContent(request);
+        var mapped = new Api2Request()
+        {
+            Consignor = request.From,
+            Consignee = request.To,
+            Cartons = request.Packages.Select(s => new CartonDimension()
+            {
+                Width = s.Width,
+                Height = s.Height,
+                Depth = s.Depth
+            }).ToList()
+        };
+        var content = HttpHelpers.CreateJsonHttpContent(mapped);
         var timeout = HttpHelpers.GetRequestTimeout(_configuration);
         using var tokenSource = timeout.HasValue
             ? new CancellationTokenSource(timeout.Value)

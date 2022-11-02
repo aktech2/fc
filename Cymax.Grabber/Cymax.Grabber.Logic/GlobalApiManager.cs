@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cymax.Grabber.Entities.Interfaces;
+using Cymax.Grabber.Entities.Models.Common;
 using Cymax.Grabber.Entities.Models.Factory;
 using Cymax.Grabber.Logic.Utils;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,73 +14,52 @@ namespace Cymax.Grabber.Logic;
 //Singleton Lazy implementation 
 public class GlobalApiManager
 {
-    public static GlobalApiManager Instance => _lazy.Value;
-    
-    private Dictionary<Type, Type> _requestToManagerMapping = new Dictionary<Type, Type>();
-    private IServiceProvider _serviceProvider;
-    private ILogger _logger;
-    private static readonly Lazy<GlobalApiManager> _lazy = new Lazy<GlobalApiManager>(() => new GlobalApiManager());
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger _logger;
+    private List<Type> _managers;
 
-    private GlobalApiManager()
-    {
-    }
-    
-    public void Init(IServiceProvider serviceProvider)
+    public GlobalApiManager(IServiceProvider serviceProvider, ILogger<GlobalApiManager> logger)
     {
         _serviceProvider = serviceProvider;
-        _logger = serviceProvider.GetRequiredService<ILogger<GlobalApiManager>>();
-        var modelsAssembly = typeof(ProcessingResponse).Assembly;
+        _logger = logger;
+    }
+    
+    public void Init()
+    {
         var managersAssembly = typeof(GlobalApiManager).Assembly;
-        
-        var requests = modelsAssembly
-            .GetTypes()
-            .Where(w => w.IsClass && typeof(IRequest).IsAssignableFrom(w))
-            .ToList();
-
-        var managers = managersAssembly
+        _managers = managersAssembly
             .GetTypes()
             .Where(w => w.IsClass && typeof(IBaseApiManager).IsAssignableFrom(w))
-            .Select(s => (IBaseApiManager)serviceProvider.GetRequiredService(s))
             .ToList();
-
-        foreach (var request in requests)
-        {
-            var manager = managers.FirstOrDefault(f => f.RequestType == request);
-            if (manager == null)
-                throw new Exception($"There are no manager for request of type \"{request.FullName}\"");
-            
-            _requestToManagerMapping.Add(request, manager.GetType());
-        }
     }
 
-    public async Task<List<ProcessingResponse>> ProcessRequests(List<IRequest> requests)
+    public async Task<List<ProcessingResponse>> ProcessRequest(CommonRequest request)
     {
-        var tasks = requests.Select(ProcessRequest);
-        var result = await Task.WhenAll(tasks);
+        var works = _managers.Select(managerType => ProcessRequest(request, managerType));
+        var result = await Task.WhenAll(works);
         var list = result.ToList();
-        //Sort objects by price
         list.Sort(new ProcessingResponseComparer());
         return list;
     }
 
-    private async Task<ProcessingResponse> ProcessRequest(IRequest request)
+    private async Task<ProcessingResponse> ProcessRequest(CommonRequest request, Type managerType)
     {
-        var requestType = request.GetType();
-        _logger.LogInformation($"Processing of {requestType} started");
+        _logger.LogInformation($"Processing of {managerType} started");
+        IBaseApiManager manager = null;
         try
         {
-            var manager = (IBaseApiManager)_serviceProvider.GetRequiredService(_requestToManagerMapping[requestType]);
+            manager = (IBaseApiManager)_serviceProvider.GetRequiredService(managerType);
             var result = await manager.MakeRequest(request);
-            return new ProcessingResponse(requestType, result);
+            return new ProcessingResponse(manager.Name, result);
         }
         catch (Exception e)
         {
             _logger.LogError(e, $"Exception during sending request - {e.Message}");
-            return new ProcessingResponse(requestType, e);
+            return new ProcessingResponse(manager?.Name ?? managerType.Name, e);
         }
         finally
         {
-            _logger.LogInformation($"Processing of {requestType} finished");
+            _logger.LogInformation($"Processing of {managerType} finished");
         }
     }
 }

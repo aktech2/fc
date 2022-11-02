@@ -6,6 +6,7 @@ using Cymax.Grabber.Entities.Interfaces;
 using Cymax.Grabber.Entities.Models.Api1.Requests;
 using Cymax.Grabber.Entities.Models.Api2.Requests;
 using Cymax.Grabber.Entities.Models.Api3.Requests;
+using Cymax.Grabber.Entities.Models.Common;
 using Cymax.Grabber.Logic;
 using Cymax.Grabber.Logic.Utils;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,46 +19,25 @@ namespace Cymax.Grabber.Service
         {
             /*
              * Request urls can be set in appsettings.json
-             * Api1RequestUrl for Api1Request
-             * Api2RequestUrl for Api2Request
-             * Api3RequestUrl for Api3Request
+             * Api1RequestUrl for Api1
+             * Api2RequestUrl for Api2
+             * Api3RequestUrl for Api3
              * 
-             * GlobalApiManager.Instance.Init is one time operation that must be performed before GlobalApiManager.Instance.ProcessRequests
-             * 
-             * How IRequest must be processed decided inside GlobalApiManager.Instance.ProcessRequests.
-             * It retrieves preferred API Manager according RequestType property from IBaseApiManager interface
+             * GlobalApiManager.Init is one time operation that must be performed before GlobalApiManager.ProcessRequests
+             *
+             * For each CommonRequest GlobalApiManager.ProcessRequests create several API Managers and make request to different APIs
+             *
+             * Each of implemented API Managers cast CommonRequest to model that required for specific API 
              *
              * Response with the cheapest price will always be the first in the result list
              *
-             * ProcessingResponse can be matched with IRequest from input list by RequestType property
             */
-            GlobalApiManager.Instance.Init(CreateProvider());
-            var requests = new List<IRequest>()
-            {
-                new Api1Request(),
-                new Api2Request(),
-                new Api3Request()
-                {
-                    Source = "3440, My street, I",
-                    Destination = "3440, My Street, My neighbor",
-                    Packages = new List<Package>()
-                    {
-                        new Package()
-                        {
-                            Width = 1m,
-                            Depth = 0.05m,
-                            Height = 5.404m
-                        },
-                        new Package()
-                        {
-                            Width = 11m,
-                            Depth = 1.05m,
-                            Height = 0.404m
-                        }
-                    }
-                }
-            };
-            var result = await GlobalApiManager.Instance.ProcessRequests(requests);
+            var serviceProvider = CreateProvider();
+            var globalApiManager = serviceProvider.GetRequiredService<GlobalApiManager>();
+            globalApiManager.Init();
+
+            var request = GetSomeRequest();
+            var result = await globalApiManager.ProcessRequest(request);
             
             Console.WriteLine("Results:");
             for (int i = 0; i < result.Count; i++)
@@ -69,7 +49,7 @@ namespace Cymax.Grabber.Service
                 var cheapestMarker = item.IsSuccess && i == 0
                     ? "[Cheapest]"
                     : string.Empty;
-                Console.WriteLine($"Request: {item.RequestType.Name}\tPrice: {price}\t{cheapestMarker}");
+                Console.WriteLine($"API: {item.ApiManager}\tPrice: {price}\t{cheapestMarker}");
             }
 
             Console.ReadLine();
@@ -80,6 +60,30 @@ namespace Cymax.Grabber.Service
             var collection = new ServiceCollection();
             collection.AddApiManagers();
             return collection.BuildServiceProvider();
+        }
+
+        private static CommonRequest GetSomeRequest()
+        {
+            return new CommonRequest()
+            {
+                From = "My address",
+                To = "Another address",
+                Packages = new List<CommonPackage>()
+                {
+                    new CommonPackage()
+                    {
+                        Width = 10m,
+                        Height = 5m,
+                        Depth = 0.1m
+                    },
+                    new CommonPackage()
+                    {
+                        Width = 5m,
+                        Height = 50m,
+                        Depth = 1m
+                    }
+                }
+            };
         }
     }
 }

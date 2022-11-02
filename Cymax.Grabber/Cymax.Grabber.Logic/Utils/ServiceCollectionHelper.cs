@@ -30,5 +30,6 @@ public static class ServiceCollectionHelper
         collection.AddHttpClient<Api2Manager>();
         collection.AddHttpClient<Api3Manager>();
         collection.AddSingleton(configuration);
+        collection.AddSingleton<GlobalApiManager>();
     }
 }

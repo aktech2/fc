@@ -15,6 +15,17 @@ namespace Cymax.Grabber.Service
     {
         static async Task Main(string[] args)
         {
+            /*
+             * Request urls can be set in appsettings.json
+             * Api1RequestUrl for Api1Request
+             * Api2RequestUrl for Api2Request
+             * Api3RequestUrl for Api3Request
+             * 
+             * GlobalApiManager.Instance.Init is one time operation that must be performed before GlobalApiManager.Instance.ProcessRequests
+             * 
+             * How IRequest must be processed decided inside GlobalApiManager.Instance.ProcessRequests.
+             * It retrieves preferred API Manager according RequestType property from IBaseApiManager interface
+            */
             GlobalApiManager.Instance.Init(CreateProvider());
             var requests = new List<IRequest>()
             {

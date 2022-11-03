@@ -30,7 +30,6 @@ namespace Cymax.Grabber.Service
         {
             var serviceProvider = CreateProvider();
             var globalApiManager = serviceProvider.GetRequiredService<GlobalApiManager>();
-            globalApiManager.Init();
 
             var request = GetRequestSample();
             var result = await globalApiManager.ProcessRequest(request);

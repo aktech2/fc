@@ -8,6 +8,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cymax.Grabber.Logic", "Cyma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cymax.Grabber.Tests", "Cymax.Grabber.Tests\Cymax.Grabber.Tests.csproj", "{9B0ECFBD-12FB-43C1-9291-EE64B75BDD67}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cymax.Grabber.Api1Manager", "Cymax.Grabber.Api1Manager\Cymax.Grabber.Api1Manager.csproj", "{ABA7C77D-217F-46D1-89DB-B67C1D48E4CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cymax.Grabber.Api2Manager", "Cymax.Grabber.Api2Manager\Cymax.Grabber.Api2Manager.csproj", "{BB9CC8BF-E16E-4044-BC3F-ED158F8E5FE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cymax.Grabber.Api3Manager", "Cymax.Grabber.Api3Manager\Cymax.Grabber.Api3Manager.csproj", "{278A6E2F-E188-4959-A087-7D738A659C2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cymax.Grabber.CommonUtils", "Cymax.Grabber.CommonUtils\Cymax.Grabber.CommonUtils.csproj", "{FAB54285-05A9-4DA0-BBC1-A2E96D04CC2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +38,21 @@ Global
 		{9B0ECFBD-12FB-43C1-9291-EE64B75BDD67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B0ECFBD-12FB-43C1-9291-EE64B75BDD67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B0ECFBD-12FB-43C1-9291-EE64B75BDD67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABA7C77D-217F-46D1-89DB-B67C1D48E4CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABA7C77D-217F-46D1-89DB-B67C1D48E4CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABA7C77D-217F-46D1-89DB-B67C1D48E4CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABA7C77D-217F-46D1-89DB-B67C1D48E4CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB9CC8BF-E16E-4044-BC3F-ED158F8E5FE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB9CC8BF-E16E-4044-BC3F-ED158F8E5FE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB9CC8BF-E16E-4044-BC3F-ED158F8E5FE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB9CC8BF-E16E-4044-BC3F-ED158F8E5FE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{278A6E2F-E188-4959-A087-7D738A659C2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{278A6E2F-E188-4959-A087-7D738A659C2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{278A6E2F-E188-4959-A087-7D738A659C2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{278A6E2F-E188-4959-A087-7D738A659C2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAB54285-05A9-4DA0-BBC1-A2E96D04CC2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAB54285-05A9-4DA0-BBC1-A2E96D04CC2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAB54285-05A9-4DA0-BBC1-A2E96D04CC2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAB54285-05A9-4DA0-BBC1-A2E96D04CC2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

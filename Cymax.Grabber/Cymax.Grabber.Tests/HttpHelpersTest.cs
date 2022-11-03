@@ -1,12 +1,9 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Cymax.Grabber.CommonUtils;
 using Cymax.Grabber.Entities;
-using Cymax.Grabber.Entities.Models.Api1.Requests;
-using Cymax.Grabber.Entities.Models.Api1.Responses;
-using Cymax.Grabber.Entities.Models.Api3.Requests;
-using Cymax.Grabber.Entities.Models.Api3.Responses;
-using Cymax.Grabber.Logic.Utils;
+using Cymax.Grabber.Tests.Models;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using NUnit.Framework;
@@ -25,7 +22,7 @@ public class HttpHelpersTest
     [Test(Description = "Tests if JSON request can be successfully generated from object"), Order(1)]
     public void JsonRequestSuccessTest()
     {
-        var obj = new Api1Request();
+        var obj = new SimpleTestModel();
         var request = HttpHelpers.CreateJsonHttpContent(obj);
         
         Assert.IsNotNull(request);
@@ -41,7 +38,7 @@ public class HttpHelpersTest
     [Test(Description = "Tests if XML request can be successfully generated from object"), Order(2)]
     public void XmlRequestSuccessTest()
     {
-        var obj = new Api3Request();
+        var obj = new SimpleTestModel();
         var request = HttpHelpers.CreateXmlHttpContent(obj);
         
         Assert.IsNotNull(request);
@@ -57,7 +54,7 @@ public class HttpHelpersTest
     [Test(Description = "Tests if JSON response can be successfully retrieved from http client"), Order(3)]
     public async Task JsonResponseSuccessTest()
     {
-        var obj = new Api1Response()
+        var obj = new SimpleResponse()
         {
             Total = 10m
         };
@@ -68,7 +65,7 @@ public class HttpHelpersTest
             Content = HttpHelpers.CreateJsonHttpContent(obj)
         };
 
-        var responseObject = await HttpHelpers.ProcessApiJsonResponse<Api1Response>(response);
+        var responseObject = await HttpHelpers.ProcessApiJsonResponse<SimpleResponse>(response);
         
         Assert.IsNotNull(responseObject);
         Assert.AreEqual(obj.Total, responseObject.Total);
@@ -80,9 +77,9 @@ public class HttpHelpersTest
     [Test(Description = "Tests if XML response can be successfully retrieved from http client"), Order(4)]
     public async Task XmlResponseSuccessTest()
     {
-        var obj = new Api3Response()
+        var obj = new SimpleResponse()
         {
-            Quote = 10m
+            Total = 10m
         };
 
         var response = new HttpResponseMessage()
@@ -91,10 +88,10 @@ public class HttpHelpersTest
             Content = HttpHelpers.CreateXmlHttpContent(obj)
         };
 
-        var responseObject = await HttpHelpers.ProcessApiXmlResponse<Api3Response>(response);
+        var responseObject = await HttpHelpers.ProcessApiXmlResponse<SimpleResponse>(response);
         
         Assert.IsNotNull(responseObject);
-        Assert.AreEqual(obj.Quote, responseObject.Quote);
+        Assert.AreEqual(obj.Total, responseObject.Total);
     }
 
     /// <summary>

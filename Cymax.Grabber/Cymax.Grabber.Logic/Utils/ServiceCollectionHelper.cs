@@ -1,4 +1,6 @@
-﻿using Cymax.Grabber.Logic.Managers;
+﻿using Cymax.Grabber.Api1Manager.Utils;
+using Cymax.Grabber.Api2Manager.Utils;
+using Cymax.Grabber.Api3Manager.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -33,9 +35,9 @@ public static class ServiceCollectionHelper
             });
         });
         collection.AddHttpClient();
-        collection.AddHttpClient<Api1Manager>();
-        collection.AddHttpClient<Api2Manager>();
-        collection.AddHttpClient<Api3Manager>();
+        collection.AddApi1Manager();
+        collection.AddApi2Manager();
+        collection.AddApi3Manager();
         collection.AddSingleton(configuration);
         collection.AddSingleton<GlobalApiManager>();
     }

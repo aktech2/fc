@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
-using Cymax.Grabber.Entities.Models.Api3.Requests;
-using Cymax.Grabber.Logic.Utils;
+using Cymax.Grabber.CommonUtils;
+using Cymax.Grabber.Tests.Models;
 using NUnit.Framework;
 
 namespace Cymax.Grabber.Tests;
@@ -19,19 +19,10 @@ public class XmlSerializerTests
     /// <summary>
     /// Serialization sample object.
     /// </summary>
-    private static readonly Api3Request Object = new Api3Request()
+    private static readonly SimpleTestModel Object = new SimpleTestModel()
     {
         Source = "Start",
-        Destination = "Finish",
-        Packages = new List<Package>()
-        {
-            new Package()
-            {
-                Width = 1,
-                Height = 2,
-                Depth = 3
-            }
-        }
+        Destination = "Finish"
     };
     /// <summary>
     /// Sample object serialized XML <see cref="XmlSerializerTests.XmlSerializationSuccessTest"/>
@@ -47,7 +38,7 @@ public class XmlSerializerTests
         _serializedXml = XmlConvertor.Serialize(Object);
         Assert.IsNotNull(_serializedXml, "Serialized string is null");
 
-        var rootTagAttribute = (XmlRootAttribute) typeof(Api3Request)
+        var rootTagAttribute = (XmlRootAttribute) typeof(SimpleTestModel)
             .GetCustomAttributes(typeof(XmlRootAttribute), false)
             .FirstOrDefault();
         var rootTagName = rootTagAttribute?.ElementName;
@@ -65,7 +56,7 @@ public class XmlSerializerTests
     [Test(Description = "Tests if data can be successfully deserialized from string"), Order(2)]
     public void XmlDeserializationSuccessTest()
     {
-        var deserialized = XmlConvertor.Deserialize<Api3Request>(_serializedXml);
+        var deserialized = XmlConvertor.Deserialize<SimpleTestModel>(_serializedXml);
         Assert.AreEqual(Object.Source, deserialized.Source);
     }
 
@@ -76,7 +67,7 @@ public class XmlSerializerTests
     public void XmlDeserializationSuccessStreamTest()
     {
         using Stream stream = new MemoryStream(Encoding.UTF8.GetBytes(_serializedXml));
-        var deserialized = XmlConvertor.Deserialize<Api3Request>(stream);
+        var deserialized = XmlConvertor.Deserialize<SimpleTestModel>(stream);
         Assert.AreEqual(Object.Source, deserialized.Source);
     }
 
@@ -87,7 +78,7 @@ public class XmlSerializerTests
     public void XmlDeserializationFailCorruptedTest()
     {
         Assert.Catch<InvalidOperationException>(
-            () => XmlConvertor.Deserialize<Api3Request>(_serializedXml.Substring(0, 1))
+            () => XmlConvertor.Deserialize<SimpleTestModel>(_serializedXml.Substring(0, 1))
         );
     }
 }

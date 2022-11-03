@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cymax.Grabber.CommonUtils;
 using Cymax.Grabber.Entities.Interfaces;
 using Cymax.Grabber.Entities.Models.Common;
 using Cymax.Grabber.Entities.Models.Factory;
-using Cymax.Grabber.Logic.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -27,11 +27,6 @@ public class GlobalApiManager
     private readonly ILogger _logger;
 
     /// <summary>
-    /// List of available managers
-    /// </summary>
-    private static List<Type> _managers;
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="GlobalApiManager"/> class.
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
@@ -40,18 +35,6 @@ public class GlobalApiManager
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
-    }
-
-    /// <summary>
-    /// Initializes this instance. Method required to be called once on startup
-    /// </summary>
-    public void Init()
-    {
-        var managersAssembly = typeof(GlobalApiManager).Assembly;
-        _managers = managersAssembly
-            .GetTypes()
-            .Where(w => w.IsClass && typeof(IBaseApiManager).IsAssignableFrom(w))
-            .ToList();
     }
 
     /// <summary>
@@ -65,7 +48,8 @@ public class GlobalApiManager
     /// <returns></returns>
     public async Task<List<ProcessingResponse>> ProcessRequest(CommonRequest request)
     {
-        var works = _managers.Select(managerType => ProcessRequest(request, managerType));
+        var managers = _serviceProvider.GetRequiredService<IEnumerable<IBaseApiManager>>();
+        var works = managers.Select(manager => ProcessRequest(request, manager));
         var result = await Task.WhenAll(works);
         var list = result.ToList();
         list.Sort(new ProcessingResponseComparer());
@@ -76,26 +60,32 @@ public class GlobalApiManager
     /// Initialize on of API Managers and process request on it.
     /// </summary>
     /// <param name="request">The <see cref="CommonRequest"/></param>
-    /// <param name="managerType">Type of the manager.</param>
+    /// <param name="manager">API Manager <see cref="IBaseApiManager"/></param>
     /// <returns></returns>
-    private async Task<ProcessingResponse> ProcessRequest(CommonRequest request, Type managerType)
+    private async Task<ProcessingResponse> ProcessRequest(CommonRequest request, IBaseApiManager manager)
     {
-        _logger.LogInformation($"Processing of {managerType} started");
-        IBaseApiManager manager = null;
+        _logger.LogInformation("API Manager \\\"{ManagerName}\\\" started", manager.Name);
         try
         {
-            manager = (IBaseApiManager)_serviceProvider.GetRequiredService(managerType);
             var result = await manager.MakeRequest(request);
             return new ProcessingResponse(manager.Name, result);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, $"Exception during sending request - {e.Message}");
-            return new ProcessingResponse(manager?.Name ?? managerType.Name, e);
+            _logger.LogError(
+                e, 
+                "API Manager \\\"{ManagerName}\\\" got exception during sending request - {EMessage}", 
+                manager.Name, 
+                e.Message
+            );
+            return new ProcessingResponse(manager.Name, e);
         }
         finally
         {
-            _logger.LogInformation($"Processing of {managerType} finished");
+            _logger.LogInformation(
+                "API Manager \\\"{ManagerName}\\\" finished", 
+                manager.Name
+            );
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cymax.Grabber.CommonUtils;
 using Cymax.Grabber.Entities.Models.Factory;
-using Cymax.Grabber.Logic.Utils;
 using NUnit.Framework;
 
 namespace Cymax.Grabber.Tests;

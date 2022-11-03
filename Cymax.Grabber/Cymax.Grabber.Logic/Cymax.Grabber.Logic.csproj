@@ -6,6 +6,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Cymax.Grabber.Api1Manager\Cymax.Grabber.Api1Manager.csproj" />
+      <ProjectReference Include="..\Cymax.Grabber.Api2Manager\Cymax.Grabber.Api2Manager.csproj" />
+      <ProjectReference Include="..\Cymax.Grabber.Api3Manager\Cymax.Grabber.Api3Manager.csproj" />
       <ProjectReference Include="..\Cymax.Grabber.Entities\Cymax.Grabber.Entities.csproj" />
     </ItemGroup>
 

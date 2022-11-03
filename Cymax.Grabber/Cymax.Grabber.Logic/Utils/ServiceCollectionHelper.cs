@@ -6,8 +6,15 @@ using Microsoft.Extensions.Logging.Console;
 
 namespace Cymax.Grabber.Logic.Utils;
 
+/// <summary>
+/// Extension to register all business logic
+/// </summary>
 public static class ServiceCollectionHelper
 {
+    /// <summary>
+    /// Adds the API managers.
+    /// </summary>
+    /// <param name="collection">The collection.</param>
     public static void AddApiManagers(this IServiceCollection collection)
     {
         IConfiguration configuration = new ConfigurationBuilder()

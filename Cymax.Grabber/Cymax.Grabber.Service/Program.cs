@@ -1,60 +1,79 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
-using Cymax.Grabber.Entities.Interfaces;
-using Cymax.Grabber.Entities.Models.Api1.Requests;
-using Cymax.Grabber.Entities.Models.Api2.Requests;
-using Cymax.Grabber.Entities.Models.Api3.Requests;
 using Cymax.Grabber.Entities.Models.Common;
+using Cymax.Grabber.Entities.Models.Factory;
 using Cymax.Grabber.Logic;
 using Cymax.Grabber.Logic.Utils;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cymax.Grabber.Service
 {
+    /*
+     * Request urls should be set in appsettings.json
+     * Api1RequestUrl for API 1
+     * Api2RequestUrl for API 2
+     * Api3RequestUrl for API 3
+    */
+
+    /// <summary>
+    /// Main execution class
+    /// </summary>
     class Program
     {
+        /// <summary>
+        /// Defines the entry point of the application.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
         static async Task Main(string[] args)
         {
-            /*
-             * Request urls can be set in appsettings.json
-             * Api1RequestUrl for Api1
-             * Api2RequestUrl for Api2
-             * Api3RequestUrl for Api3
-             * 
-             * GlobalApiManager.Init is one time operation that must be performed before GlobalApiManager.ProcessRequests
-             *
-             * For each CommonRequest GlobalApiManager.ProcessRequests create several API Managers and make request to different APIs
-             *
-             * Each of implemented API Managers cast CommonRequest to model that required for specific API 
-             *
-             * Response with the cheapest price will always be the first in the result list
-             *
-            */
             var serviceProvider = CreateProvider();
             var globalApiManager = serviceProvider.GetRequiredService<GlobalApiManager>();
             globalApiManager.Init();
 
-            var request = GetSomeRequest();
+            var request = GetRequestSample();
             var result = await globalApiManager.ProcessRequest(request);
-            
-            Console.WriteLine("Results:");
+            ShowReport(result);
+            Console.ReadLine();
+        }
+        
+        /// <summary>
+        /// Renders in console result of <see cref="GlobalApiManager.ProcessRequest"/> method in human friendly form
+        /// </summary>
+        /// <param name="result">The result of <see cref="GlobalApiManager.ProcessRequest"/> method</param>
+        private static void ShowReport(List<ProcessingResponse> result)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("Results:");
+            sb.AppendLine("API:\tPrice:\tComment:");
             for (int i = 0; i < result.Count; i++)
             {
                 var item = result[i];
-                var price = item.IsSuccess 
-                    ? item.Value.ToString(CultureInfo.InvariantCulture)
-                    : "-";
-                var cheapestMarker = item.IsSuccess && i == 0
-                    ? "[Cheapest]"
-                    : string.Empty;
-                Console.WriteLine($"API: {item.ApiManager}\tPrice: {price}\t{cheapestMarker}");
+                sb.Append($"{item.ApiManagerName}\t");
+                if (item.IsSuccess)
+                    sb.Append(item.Value);
+                else
+                    sb.Append("-");
+                sb.Append('\t');
+                if (item.IsSuccess)
+                {
+                    if (i == 0)
+                        sb.AppendLine("[Cheapest]");
+                }
+                else
+                {
+                    sb.AppendLine($"Error: {item.Exception.Message}");
+                }
             }
-
-            Console.ReadLine();
+            Console.WriteLine(sb.ToString());
         }
 
+        /// <summary>
+        /// Creates the service provider.
+        /// </summary>
+        /// <returns>Dependency injection service provider</returns>
         private static IServiceProvider CreateProvider()
         {
             var collection = new ServiceCollection();
@@ -62,7 +81,11 @@ namespace Cymax.Grabber.Service
             return collection.BuildServiceProvider();
         }
 
-        private static CommonRequest GetSomeRequest()
+        /// <summary>
+        /// Gets the request sample.
+        /// </summary>
+        /// <returns>Sample of <see cref="CommonRequest"/></returns>
+        private static CommonRequest GetRequestSample()
         {
             return new CommonRequest()
             {

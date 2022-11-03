@@ -1,11 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Cymax.Grabber.Entities;
 using Cymax.Grabber.Entities.Interfaces;
-using Cymax.Grabber.Entities.Models.Api1.Requests;
 using Cymax.Grabber.Entities.Models.Api2.Requests;
 using Cymax.Grabber.Entities.Models.Api2.Responses;
 using Cymax.Grabber.Entities.Models.Common;
@@ -14,20 +12,54 @@ using Microsoft.Extensions.Configuration;
 
 namespace Cymax.Grabber.Logic.Managers;
 
+/// <summary>
+/// API Manager for API 2
+/// </summary>
+/// <seealso cref="Cymax.Grabber.Entities.Interfaces.IBaseApiManager" />
 internal class Api2Manager: IBaseApiManager
 {
+    /// <summary>
+    /// Gets the name.
+    /// </summary>
+    /// <value>
+    /// The name.
+    /// </value>
     public string Name => "API2";
-        
+
+    /// <summary>
+    /// The HTTP client
+    /// </summary>
     private readonly HttpClient _client;
+
+    /// <summary>
+    /// The application configuration
+    /// </summary>
     private readonly IConfiguration _configuration;
+
+    /// <summary>
+    /// Gets the request URL.
+    /// </summary>
+    /// <value>
+    /// The request URL.
+    /// </value>
     private string _requestUrl => _configuration[Constants.Api2RequestUrlConfigurationRootName];
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Api2Manager"/> class.
+    /// </summary>
+    /// <param name="client">The client.</param>
+    /// <param name="configuration">The configuration.</param>
     public Api2Manager(HttpClient client, IConfiguration configuration)
     {
         _client = client;
         _configuration = configuration;
     }
 
+    /// <summary>
+    /// Makes the request to specific API.
+    /// </summary>
+    /// <param name="request">The request that should be processed.</param>
+    /// <returns></returns>
     public async Task<decimal> MakeRequest(CommonRequest request)
     {
         var mapped = new Api2Request()

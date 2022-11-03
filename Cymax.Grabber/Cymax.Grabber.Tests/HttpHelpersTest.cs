@@ -13,9 +13,15 @@ using NUnit.Framework;
 
 namespace Cymax.Grabber.Tests;
 
+/// <summary>
+/// Http helpers tests
+/// </summary>
 [TestFixture]
 public class HttpHelpersTest
 {
+    /// <summary>
+    /// Success generation JSON request content test.
+    /// </summary>
     [Test(Description = "Tests if JSON request can be successfully generated from object"), Order(1)]
     public void JsonRequestSuccessTest()
     {
@@ -28,7 +34,10 @@ public class HttpHelpersTest
         Assert.AreEqual("application/json", request.Headers.ContentType.MediaType);
         Assert.AreEqual("utf-8", request.Headers.ContentType.CharSet);
     }
-    
+
+    /// <summary>
+    /// Success generation XML request content test.
+    /// </summary>
     [Test(Description = "Tests if XML request can be successfully generated from object"), Order(2)]
     public void XmlRequestSuccessTest()
     {
@@ -41,7 +50,10 @@ public class HttpHelpersTest
         Assert.AreEqual("application/xml", request.Headers.ContentType.MediaType);
         Assert.AreEqual("utf-8", request.Headers.ContentType.CharSet);
     }
-    
+
+    /// <summary>
+    /// Success processing JSON response message test.
+    /// </summary>
     [Test(Description = "Tests if JSON response can be successfully retrieved from http client"), Order(3)]
     public async Task JsonResponseSuccessTest()
     {
@@ -61,7 +73,10 @@ public class HttpHelpersTest
         Assert.IsNotNull(responseObject);
         Assert.AreEqual(obj.Total, responseObject.Total);
     }
-    
+
+    /// <summary>
+    /// Success processing XML response message test.
+    /// </summary>
     [Test(Description = "Tests if XML response can be successfully retrieved from http client"), Order(4)]
     public async Task XmlResponseSuccessTest()
     {
@@ -81,7 +96,10 @@ public class HttpHelpersTest
         Assert.IsNotNull(responseObject);
         Assert.AreEqual(obj.Quote, responseObject.Quote);
     }
-    
+
+    /// <summary>
+    /// Success retrieving Timeout non-zero value test.
+    /// </summary>
     [Test(Description = "Tests if HTTP request timeout can be retrieved"), Order(5)]
     public void TimeoutSuccessTest()
     {
@@ -97,7 +115,10 @@ public class HttpHelpersTest
         var timeout = HttpHelpers.GetRequestTimeout(mockedConfiguration.Object);
         Assert.AreEqual(30000, timeout);
     }
-    
+
+    /// <summary>
+    /// Success retrieving Timeout zero value test.
+    /// </summary>
     [Test(Description = "Tests if zero HTTP request timeout can be retrieved"), Order(6)]
     public void TimeoutSuccessZeroTest()
     {

@@ -11,27 +11,52 @@ using Newtonsoft.Json;
 
 namespace Cymax.Grabber.Logic.Utils
 {
-    // Class covered by tests
+    /// <summary>
+    /// Helpers for HTTP requests and responses (JSON and XML)
+    /// </summary>
     public class HttpHelpers
     {
+        /// <summary>
+        /// Creates the JSON HTTP content.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns></returns>
         public static StringContent CreateJsonHttpContent(object data)
         {
             var serializedData = JsonConvert.SerializeObject(data);
             return new StringContent(serializedData, Encoding.UTF8, "application/json");
         }
-        
+
+        /// <summary>
+        /// Creates the XML HTTP content.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns></returns>
         public static StringContent CreateXmlHttpContent(object data)
         {
             var serializedData = XmlConvertor.Serialize(data);
             return new StringContent(serializedData, Encoding.UTF8, "application/xml");
         }
 
+        /// <summary>
+        /// Gets the HTTP request timeout.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns></returns>
         public static int? GetRequestTimeout(IConfiguration configuration)
         {
             var value = configuration.GetSection(Constants.TimeoutConfigurationRootName)?.Get<int>();
             return value == 0 ? null : value;
         }
 
+        /// <summary>
+        /// Processes the JSON response.
+        /// </summary>
+        /// <typeparam name="TResponseModel">The type of the response model.</typeparam>
+        /// <param name="response">The response.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Response is null</exception>
+        /// <exception cref="Cymax.Grabber.Entities.Models.Exceptions.ApiRequestException"></exception>
         public static async Task<TResponseModel> ProcessApiJsonResponse<TResponseModel>(HttpResponseMessage response)
         {
             if (response.IsSuccessStatusCode)
@@ -54,7 +79,15 @@ namespace Cymax.Grabber.Logic.Utils
             var message = await response.Content.ReadAsStringAsync();
             throw new ApiRequestException(response.StatusCode, message);
         }
-        
+
+        /// <summary>
+        /// Processes the XML response.
+        /// </summary>
+        /// <typeparam name="TResponseModel">The type of the response model.</typeparam>
+        /// <param name="response">The response.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Response is null</exception>
+        /// <exception cref="Cymax.Grabber.Entities.Models.Exceptions.ApiRequestException"></exception>
         public static async Task<TResponseModel> ProcessApiXmlResponse<TResponseModel>(HttpResponseMessage response)
         {
             if (response.IsSuccessStatusCode)

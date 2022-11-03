@@ -10,9 +10,15 @@ using NUnit.Framework;
 
 namespace Cymax.Grabber.Tests;
 
+/// <summary>
+/// XML serializer/deserializer tests
+/// </summary>
 [TestFixture]
 public class XmlSerializerTests
 {
+    /// <summary>
+    /// Serialization sample object.
+    /// </summary>
     private static readonly Api3Request Object = new Api3Request()
     {
         Source = "Start",
@@ -27,8 +33,14 @@ public class XmlSerializerTests
             }
         }
     };
+    /// <summary>
+    /// Sample object serialized XML <see cref="XmlSerializerTests.XmlSerializationSuccessTest"/>
+    /// </summary>
     private string _serializedXml;
-        
+
+    /// <summary>
+    /// XML serialization success test.
+    /// </summary>
     [Test(Description = "Tests if data can be successfully serialized to string"), Order(1)]
     public void XmlSerializationSuccessTest()
     {
@@ -47,13 +59,19 @@ public class XmlSerializerTests
         Assert.IsTrue(contains, "Result string does not contains root tag");
     }
 
+    /// <summary>
+    /// XML deserialization from string success test.
+    /// </summary>
     [Test(Description = "Tests if data can be successfully deserialized from string"), Order(2)]
     public void XmlDeserializationSuccessTest()
     {
         var deserialized = XmlConvertor.Deserialize<Api3Request>(_serializedXml);
         Assert.AreEqual(Object.Source, deserialized.Source);
     }
-    
+
+    /// <summary>
+    /// XML deserialization from stream success test.
+    /// </summary>
     [Test(Description = "Tests if data can be successfully deserialized from stream"), Order(3)]
     public void XmlDeserializationSuccessStreamTest()
     {
@@ -61,7 +79,10 @@ public class XmlSerializerTests
         var deserialized = XmlConvertor.Deserialize<Api3Request>(stream);
         Assert.AreEqual(Object.Source, deserialized.Source);
     }
-    
+
+    /// <summary>
+    /// XML deserialization from corrupted string with expected fail test.
+    /// </summary>
     [Test(Description = "Tests if corrupted data can not be successfully deserialized from string"), Order(4)]
     public void XmlDeserializationFailCorruptedTest()
     {

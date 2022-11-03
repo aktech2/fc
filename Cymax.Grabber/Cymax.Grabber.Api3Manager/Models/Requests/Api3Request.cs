@@ -4,7 +4,8 @@ using System.Xml.Serialization;
 namespace Cymax.Grabber.Api3Manager.Models.Requests;
 
 /// <summary>
-/// Request definition for API 3
+/// Request definition for API 3. 
+/// This class is public since <see cref="XmlSerializer"/> do not accept non-public objects.
 /// </summary>
 [XmlRoot("xml")]
 public class Api3Request

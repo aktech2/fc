@@ -5,7 +5,7 @@ namespace Cymax.Grabber.Api3Manager.Models.Requests;
 /// <summary>
 ///  Package dimensions definition for API 3
 /// </summary>
-internal class Package
+public class Package
 {
     /// <summary>
     /// Gets or sets the width.
